@@ -1,7 +1,17 @@
+import { getSession } from '@/lib/auth';
 import Image from "next/image";
 import styles from "./page.module.css";
 
-export default function Home() {
+
+export default async function Home() {
+
+  const session = await getSession()
+
+  // Check if the user is authenticated
+  if (!session) {
+    return <p>You must be logged in to access this page.</p>
+  }
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -28,6 +38,8 @@ export default function Home() {
         </div>
       </div>
 
+      <div><h3>Welcome, {session.user?.name}!</h3> </div>
+
       <div className={styles.center}>
         <Image
           className={styles.logo}
@@ -37,6 +49,10 @@ export default function Home() {
           height={37}
           priority
         />
+      </div>
+
+      <div>
+
       </div>
 
       <div className={styles.grid}>
