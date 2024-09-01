@@ -9,7 +9,9 @@ export default async function Home() {
 
   // Check if the user is authenticated
   if (!session) {
-    return <p>You must be logged in to access this page.</p>
+    return <h1 className="flex justify-center">
+      You must be logged in to access this page
+    </h1>
   }
 
   return (

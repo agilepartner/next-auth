@@ -4,7 +4,7 @@ This guide will help you configure NextAuth to authenticate users via Azure Acti
 
 This project is using pnpm. We assume that the project is using an `src` directory.
 
-### Step 1: Set Up Azure AD for Authentication
+## Step 1: Set Up Azure AD for Authentication
 
 1. **Register an App in Azure AD**:
 
@@ -19,7 +19,7 @@ This project is using pnpm. We assume that the project is using an `src` directo
      - Microsoft Graph > Delegated permissions > `email`, `openid`, `profile`.
    - Grant admin consent for the permissions.
 
-### Step 2: Install NextAuth.js
+## Step 2: Install NextAuth.js
 
 In your Next.js app, install the necessary dependencies:
 
@@ -27,7 +27,7 @@ In your Next.js app, install the necessary dependencies:
 pnpm install next-auth
 ```
 
-### Step 3: Configure NextAuth with Azure AD
+## Step 3: Configure NextAuth with Azure AD
 
 1. **Create a new AuthOptions** for NextAuth in the App Router structure. Place this file under `src/libs/auth.ts`.
 
@@ -54,8 +54,14 @@ pnpm install next-auth
    		},
    	},
    	secret: process.env.NEXTAUTH_SECRET,
+   	theme: {
+   		colorScheme: 'light',
+   		logo: '/next.svg',
+   	},
    }
    ```
+
+   You can customize the default login page by defining a `theme` and set the default `colorScheme` and a `logo`.
 
    To avoid TypeScript errors, you need to extend the default `Session` and `User` types in NextAuth. This can be done by creating a new file to add custom types.
 
@@ -116,7 +122,7 @@ pnpm install next-auth
    export { handler as GET, handler as POST }
    ```
 
-### Step 4: Set Environment Variables
+## Step 4: Set Environment Variables
 
 Create a `.env.local` file in the root of your project with the following environment variables:
 
@@ -131,43 +137,26 @@ NEXTAUTH_URL=http://localhost:3000
 
 Replace `your_client_id`, `your_client_secret`, and `your_tenant_id` with the values obtained from Azure AD.
 
-### Step 5: Protecting Pages in the App Router
+## Step 5: Protecting Pages in the App Router
 
 To protect pages, you can use a `middleware.ts` file to enforce authentication across your entire app or selectively for certain routes.
-
-#### Create a Middleware to Protect Routes
 
 Create a `middleware.ts` file in the root of your project:
 
 ```typescript
 // src/middleware.ts
-import { getToken } from 'next-auth/jwt'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+export { default } from 'next-auth/middleware'
 
-export async function middleware(request: NextRequest) {
-	// Get the token from the request
-	const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
-
-	// If token is not present, redirect to sign-in page
-	if (!token) {
-		const signInUrl = new URL('/api/auth/signin', request.url)
-		return NextResponse.redirect(signInUrl)
-	}
-
-	// Allow the request if the user is authenticated
-	return NextResponse.next()
-}
-
-// Specify the paths to be protected
 export const config = {
 	matcher: ['/((?!api|_next|static|.*\\..*|favicon.ico).*)'],
 }
 ```
 
-This middleware will run on every route except for specific paths like `/api`, Next.js internal paths (`/_next`), and static files. It will check if the user is authenticated and redirect to the sign-in page if they are not.
+This middleware will run on every route except for specific paths like `/api`, Next.js internal paths (`/_next`), and static files. It will check if the user is authenticated and redirect to the sign-in page if they are not. It will also ignore the `facicon.ico`.
 
-### Step 6: Access the Session in Server Components
+If you want to protect only specific routes in your app, you can adapt the `regex` accordingly.
+
+## Step 6: Access the Session in Server Components
 
 To access the session in server components, use the `getServerSession` function from NextAuth. This approach works well since server components can directly work with the session data on the server.
 
@@ -216,7 +205,7 @@ Here's how you can protect your server components and check for session data:
    - **Unauthenticated Users**: You can choose to redirect them to the sign-in page, show a message, or handle the state as per your app’s requirements.
    - **Authenticated Users**: Display personalized content based on the session data.
 
-### Step 7: Use the Session in Client Components
+## Step 7: Use the Session in Client Components
 
 1. Create a **Logout Button** client component:
 
@@ -311,7 +300,7 @@ Here's how you can protect your server components and check for session data:
    }
    ```
 
-### Summary
+## Summary
 
 1. **Azure AD Setup**: Register your application, configure secrets, and set permissions in Azure.
 2. **NextAuth Configuration**: Use the Azure AD provider in NextAuth.

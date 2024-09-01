@@ -19,6 +19,10 @@ export const authOptions: NextAuthOptions = {
 		},
 	},
 	secret: process.env.NEXTAUTH_SECRET,
+	theme: {
+		colorScheme: 'light',
+		logo: '/next.svg',
+	},
 }
 
 export async function getSession() {
