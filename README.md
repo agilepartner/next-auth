@@ -235,7 +235,7 @@ Here's how you can protect your server components and check for session data:
    Use the `useSession` hook to access the session data in your components:
 
    ```typescript
-   // src/app/components/UserProfile.tsx (or any other component/page)
+   // src/app/components/UserProfile.tsx
    'use client'
 
    import { useSession } from 'next-auth/react'
@@ -257,7 +257,10 @@ Here's how you can protect your server components and check for session data:
 
 3. Create a **Wrapper** using a **Session Provider**
 
+   `SessionProvider` needs to be used in a client component that specifies `'use client'`. To avoid problems with `layout.tsx` which is a server component, we create a simple wrapper.
+
    ```typescript
+   // src/app/components/Wrapper.tsx
    'use client'
 
    import { SessionProvider } from 'next-auth/react'
@@ -270,7 +273,14 @@ Here's how you can protect your server components and check for session data:
 
 4. Wrap the children with the **Wrapper** in `layout.tsx`
 
+   To limit the scope of the client components, we only wrap the components which need a session.
+
    ```typescript
+   // src/app/layout.tsx
+   import LogoutButton from '@/components/LogoutButton'
+   import UserProfile from '@/components/UserProfile'
+   import Wrapper from '@/components/Wrapper'
+
    export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
    	return (
    		<html lang='en'>
