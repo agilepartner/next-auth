@@ -17,15 +17,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Wrapper>
-          <header className="flex items-center justify-between p-4">
+        <header className="flex items-center justify-between p-4">
+          <Wrapper>
             <UserProfile />
             <LogoutButton />
-          </header>
-          <main>
-            {children}
-          </main>
-        </Wrapper>
+          </Wrapper>
+        </header>
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );

@@ -272,21 +272,20 @@ Here's how you can protect your server components and check for session data:
 
    ```typescript
    export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-   return (
-   	<html lang="en">
-   		<body className={inter.className}>
-   			<Wrapper>
-   				<header className="flex items-center justify-between p-4">
-   					<UserProfile />
-   					<LogoutButton />
+   	return (
+   		<html lang='en'>
+   			<body className={inter.className}>
+   				<header className='flex items-center justify-between p-4'>
+   					<Wrapper>
+   						<UserProfile />
+   						<LogoutButton />
+   					</Wrapper>
    				</header>
-   				<main>
-   					{children}
-   				</main>
-   			</Wrapper>
-   		</body>
-   	</html>
-   );
+   				<main>{children}</main>
+   			</body>
+   		</html>
+   	)
+   }
    ```
 
 ### Summary
