@@ -29,11 +29,11 @@ pnpm install next-auth
 
 ### Step 3: Configure NextAuth with Azure AD
 
-1. **Create a new API route** for NextAuth in the App Router structure. Place this file under `app/api/auth/[...nextauth]/route.ts`.
+1. **Create a new AuthOptions** for NextAuth in the App Router structure. Place this file under `src/libs/auth.ts`.
 
    ```typescript
-   // src/app/api/auth/[...nextauth]/route.ts
-   import NextAuth, { NextAuthOptions } from 'next-auth'
+   // src/libs/auth.ts
+   import { NextAuthOptions } from 'next-auth'
    import AzureADProvider from 'next-auth/providers/azure-ad'
 
    export const authOptions: NextAuthOptions = {
@@ -55,13 +55,9 @@ pnpm install next-auth
    	},
    	secret: process.env.NEXTAUTH_SECRET,
    }
-
-   const handler = NextAuth(authOptions)
-
-   export { handler as GET, handler as POST }
    ```
 
-To avoid TypeScript errors, you need to extend the default `Session` and `User` types in NextAuth. This can be done by creating a new file to add custom types.
+   To avoid TypeScript errors, you need to extend the default `Session` and `User` types in NextAuth. This can be done by creating a new file to add custom types.
 
 2. **Create a `next-auth.d.ts` file** in your project to extend the default types:
 
@@ -108,14 +104,27 @@ To avoid TypeScript errors, you need to extend the default `Session` and `User` 
    }
    ```
 
+4. **Create a new API route** for NextAuth in the App Router structure. Place this file under `src/app/api/auth/[...nextauth]/route.ts`.
+
+   ```typescript
+   // src/app/api/auth/[...nextauth]/route.ts
+   import { authOptions } from '@/libs/auth'
+   import NextAuth from 'next-auth'
+
+   const handler = NextAuth(authOptions)
+
+   export { handler as GET, handler as POST }
+   ```
+
 ### Step 4: Set Environment Variables
 
 Create a `.env.local` file in the root of your project with the following environment variables:
 
-```plaintext
+```sh
 AZURE_AD_CLIENT_ID=your_client_id
 AZURE_AD_CLIENT_SECRET=your_client_secret
 AZURE_AD_TENANT_ID=your_tenant_id
+
 NEXTAUTH_SECRET=your_nextauth_secret
 NEXTAUTH_URL=http://localhost:3000
 ```
@@ -169,9 +178,13 @@ Here's how you can protect your server components and check for session data:
    Create a helper to fetch the session on the server:
 
    ```typescript
-   // src/lib/auth.ts
-   import { getServerSession } from 'next-auth'
-   import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+   // src/libs/auth.ts
+   import { NextAuthOptions, getServerSession } from 'next-auth'
+   import AzureADProvider from 'next-auth/providers/azure-ad'
+
+   export const authOptions: NextAuthOptions = {
+   	...
+   }
 
    export async function getSession() {
    	return await getServerSession(authOptions)

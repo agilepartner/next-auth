@@ -1,4 +1,4 @@
-import { getSession } from '@/lib/auth';
+import { getSession } from '@/libs/auth';
 import Image from "next/image";
 import styles from "./page.module.css";
 
