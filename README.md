@@ -4,11 +4,11 @@ This guide will help you configure NextAuth to authenticate users via Azure Acti
 
 This project is using pnpm. We assume that the project is using an `src` directory.
 
-## Step 1: Set Up Azure AD for Authentication
+## Step 1: Set Up Microsoft Entra ID/Azure AD for Authentication
 
-1. **Register an App in Azure AD**:
+1. **Register an App in Microsoft Entra ID/Azure AD**:
 
-   - Go to the [Azure Portal](https://portal.azure.com/) and navigate to **Azure Active Directory** > **App registrations** > **New registration**.
+   - Go to the [Azure Portal](https://portal.azure.com/) and navigate to **Microsoft Entra ID/** > **App registrations** > **New registration**.
    - Name your app, set the redirect URI to `http://localhost:3000/api/auth/callback/azure-ad`, and register it.
    - After registration, go to **Certificates & secrets** and create a new client secret. Note down the secret value.
    - Under **Authentication**, ensure the redirect URI is added and set to "Web" type.
@@ -27,7 +27,7 @@ In your Next.js app, install the necessary dependencies:
 pnpm install next-auth
 ```
 
-## Step 3: Configure NextAuth with Azure AD
+## Step 3: Configure NextAuth with Microsoft Entra ID/Azure AD
 
 1. **Create a new AuthOptions** for NextAuth in the App Router structure. Place this file under `src/libs/auth.ts`.
 
@@ -135,7 +135,7 @@ NEXTAUTH_SECRET=your_nextauth_secret
 NEXTAUTH_URL=http://localhost:3000
 ```
 
-Replace `your_client_id`, `your_client_secret`, and `your_tenant_id` with the values obtained from Azure AD.
+Replace `your_client_id`, `your_client_secret`, and `your_tenant_id` with the values obtained from Microsoft Entra ID/Azure AD.
 
 ## Step 5: Protecting Pages in the App Router
 
@@ -302,10 +302,10 @@ Here's how you can protect your server components and check for session data:
 
 ## Summary
 
-1. **Azure AD Setup**: Register your application, configure secrets, and set permissions in Azure.
-2. **NextAuth Configuration**: Use the Azure AD provider in NextAuth.
+1. **Microsoft Entra ID/Azure AD Setup**: Register your application, configure secrets, and set permissions in Azure.
+2. **NextAuth Configuration**: Use the Microsoft Entra ID/Azure AD provider in NextAuth.
 3. **Middleware Protection**: Create a middleware to protect routes.
 4. **Access Session in Server Components**: Use getServerSession to check authentication state directly in server components.
 5. **Access Session in Client Components**: Use the `useSession` hook in components to manage user state.
 
-This setup ensures that all pages are protected with Azure AD authentication in a Next.js 14 App Router environment using NextAuth.js.
+This setup ensures that all pages are protected with Microsoft Entra ID/Azure AD authentication in a Next.js 14 App Router environment using NextAuth.js.
